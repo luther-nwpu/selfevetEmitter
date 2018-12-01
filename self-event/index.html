@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <script src="eventEmitter.js"></script>
+        <script type="text/javascript">
+            var events = new EventEmitter();
+            
+            events.on('jv', func1)
+            function func1() {
+                console.log('我喜欢姚菊');
+            }
+            events.off('jv')
+            events.emit('jv')
+            events.on('jv2', func2)
+            
+            function func2(name) {
+                console.log(name)
+            }
+            events.emit('jv2', '你是我老婆')
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
