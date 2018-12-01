@@ -6,7 +6,16 @@ EventEmitter.prototype.on = function(type, func) {
         this.handles[type] = []
     }
     console.log(type, typeof func)
-    this.handles[type].push(func)
+    this.handles[type].push({'func': func, 'once': false})
+}
+
+
+EventEmitter.prototype.once = function(type, func) {
+    if (!(type in this.handles)) {
+        this.handles[type] = []
+    }
+    console.log(type, typeof func)
+    this.handles[type].push({'func': func, 'once': true})
 }
 
 EventEmitter.prototype.emit = function() {
@@ -15,7 +24,10 @@ EventEmitter.prototype.emit = function() {
         return false
     }
     for(var func1 of this.handles[type]) {
-        func1.call(this, ...arguments)
+        if(func1['once'] == true) {
+            this.off(type, func1['func'])
+        }
+        func1['func'].call(this, ...arguments)
     }
 } 
 
@@ -28,7 +40,7 @@ EventEmitter.prototype.off = function(type, handle) {
         } else {
             for(var i=0; i <handles.length; i++) {
                 var _handle = handles[i]
-                if (_handle === handle) {
+                if (_handle['func'] === handle['func']) {
                     handles.splice(i, 1)
                 }
             }
